@@ -2,66 +2,86 @@ import { useState, useEffect } from "react";
 
 // API https://api.frankfurter.app/latest?amount=100&from=EUR&to=USD
 
-// DOCS https://www.frankfurter.app/docs/
+// API DOCS https://www.frankfurter.app/docs/
 
 export default function App() {
   const [amount, setAmount] = useState(0);
   const [convertFrom, setConvertFrom] = useState("USD");
   const [convertTo, setConvertTo] = useState("EUR");
   const [output, setOutput] = useState(null);
+  // const [isLoading, setIsLoading] = useState(false);
 
   function handleAmount(e) {
-    const parsedValue = parseFloat(e.target.value);
+    const parsedValue = Number(parseFloat(e.target.value));
 
     if (parsedValue >= 0) {
       setAmount(parsedValue);
     }
   }
 
-  function handleconvertFrom(e) {
-    setConvertFrom(() => e.target.value);
-  }
+  // function handleconvertFrom(e) {
+  //   setConvertFrom(() => e.target.value);
+  // }
 
-  function handleconvertTo(e) {
-    setConvertTo(() => e.target.value);
-  }
+  // function handleconvertTo(e) {
+  //   setConvertTo(() => e.target.value);
+  // }
 
-  useEffect(() => {
-    const fetchConvertionRate = async () => {
-      try {
-        const res = await fetch(
-          `https://api.frankfurter.app/latest?amount=${amount}&from=${convertFrom}&to=${convertTo}`
-        );
-        const data = await res.json();
-        setOutput(data.rates[convertTo]);
-      } catch (error) {
-        console.error(error);
+  useEffect(
+    function () {
+      async function fetchConvertionRate() {
+        try {
+          // setIsLoading(true);
+          const res = await fetch(
+            `https://api.frankfurter.app/latest?amount=${amount}&from=${convertFrom}&to=${convertTo}`
+          );
+          const data = await res.json();
+          setOutput(data.rates[convertTo]);
+          // setIsLoading(false);
+        } catch (error) {
+          console.error(error);
+        }
       }
-    };
-
-    fetchConvertionRate();
-  }, [amount, convertFrom, convertTo]);
-
-  console.log(amount);
-  console.log(`i am convert from ${convertFrom}`);
-  console.log(`i am convert to ${convertTo}`);
+      if (amount > 0 && convertFrom !== convertTo) {
+        fetchConvertionRate();
+      } else if (convertFrom === convertTo) {
+        setOutput(amount);
+      }
+    },
+    [amount, convertFrom, convertTo]
+  );
 
   return (
     <div>
-      <input type="number" value={amount} onChange={handleAmount} />
-      <select value={convertFrom} onChange={handleconvertFrom}>
+      <input
+        type="text"
+        // disabled={isLoading}
+        value={amount}
+        onChange={handleAmount}
+      />
+      <select
+        value={convertFrom}
+        onChange={(e) => setConvertFrom(e.target.value)}
+        // disabled={isLoading}
+      >
         <option value="USD">USD</option>
         <option value="EUR">EUR</option>
         <option value="CAD">CAD</option>
         <option value="INR">INR</option>
       </select>
-      <select value={convertTo} onChange={handleconvertTo}>
+      <select
+        value={convertTo}
+        onChange={(e) => setConvertTo(e.target.value)}
+        // disabled={isLoading}
+      >
         <option value="USD">USD</option>
         <option value="EUR">EUR</option>
         <option value="CAD">CAD</option>
         <option value="INR">INR</option>
       </select>
-      <p>{output}</p>
+      <p>{`${amount} ${convertFrom} is ${
+        output === null ? 0 : output
+      } ${convertTo}`}</p>
     </div>
   );
 }
