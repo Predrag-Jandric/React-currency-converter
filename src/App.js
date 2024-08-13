@@ -19,6 +19,11 @@ export default function App() {
     }
   }
 
+  function handleReset() {
+    setAmount(0);
+    setOutput(0);
+  }
+
   // function handleconvertFrom(e) {
   //   setConvertFrom(() => e.target.value);
   // }
@@ -53,35 +58,39 @@ export default function App() {
 
   return (
     <div>
+      <h1>Currency Converter</h1>
       <input
         type="text"
         // disabled={isLoading}
         value={amount}
         onChange={handleAmount}
       />
-      <select
-        value={convertFrom}
-        onChange={(e) => setConvertFrom(e.target.value)}
-        // disabled={isLoading}
-      >
-        <option value="USD">USD</option>
-        <option value="EUR">EUR</option>
-        <option value="CAD">CAD</option>
-        <option value="INR">INR</option>
-      </select>
-      <select
-        value={convertTo}
-        onChange={(e) => setConvertTo(e.target.value)}
-        // disabled={isLoading}
-      >
-        <option value="USD">USD</option>
-        <option value="EUR">EUR</option>
-        <option value="CAD">CAD</option>
-        <option value="INR">INR</option>
-      </select>
+      <section>
+        <select
+          value={convertFrom}
+          onChange={(e) => setConvertFrom(e.target.value)}
+          // disabled={isLoading}
+        >
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="CAD">CAD</option>
+          <option value="INR">INR</option>
+        </select>
+        <select
+          value={convertTo}
+          onChange={(e) => setConvertTo(e.target.value)}
+          // disabled={isLoading}
+        >
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="CAD">CAD</option>
+          <option value="INR">INR</option>
+        </select>
+      </section>
       <p>{`${amount} ${convertFrom} is ${
         output === null ? 0 : output
       } ${convertTo}`}</p>
+      <button onClick={handleReset}>Reset</button>
     </div>
   );
 }
